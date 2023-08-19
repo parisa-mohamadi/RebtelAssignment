@@ -49,7 +49,7 @@ The app follows the MVVM (Model-View-ViewModel) architecture, which promotes the
 1. You will see a drop down menu of countries.
 1. Click on or search for a country to view its details.
 1. Explore the detailed information about the selected country.
-
+ 
 ## Unit Tests
 The app includes unit tests to ensure the correctness of critical app components. To run unit tests:
 
@@ -59,5 +59,6 @@ The app includes unit tests to ensure the correctness of critical app components
 1. Select "Run" to execute the tests.
 
 ## Contributing
-Contributions are welcome! If you find any issues or want to add new features, feel free to open a pull request.
+Contributions are welcome! If you find any issues or want to add new features, feel free to reach out to me at 
+mohamadiparisa312@gmail.com.
 
