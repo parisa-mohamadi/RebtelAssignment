@@ -7,6 +7,10 @@ import org.json.JSONObject
 import java.text.NumberFormat
 import java.util.Locale
 
+/**
+ * this class has useful functions which is used by the other classes.
+ */
+
 class Utils {
     companion object {
         fun getFlagUrl(countryCode: String, jsonObject: JSONObject): String? {

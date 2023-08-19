@@ -1,7 +1,7 @@
 package com.example.rebtelassignment
 
 
-import CountryInfoScreen
+import com.example.rebtelassignment.view.CountryInfoScreen
 import com.example.rebtelassignment.viewmodel.CountryInfoViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,6 +13,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.rebtelassignment.ui.theme.RebtelAssignmentTheme
 
+/**
+ * Main entry point of the application.
+ *
+ * This class represents the main activity of the app and is responsible for setting up the UI
+ * using Jetpack Compose. It initializes the ViewModel and displays the `com.example.rebtelassignment.view.CountryInfoScreen`.
+ */
 class MainActivity : ComponentActivity() {
     private val viewModel: CountryInfoViewModel by viewModels()
 

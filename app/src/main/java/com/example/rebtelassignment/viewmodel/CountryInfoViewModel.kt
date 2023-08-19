@@ -5,12 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.rebtelassignment.model.Country
 import com.example.rebtelassignment.data.CountryRepository
-import com.example.rebtelassignment.utils.Utils.Companion.showToast
+import com.example.rebtelassignment.model.Country
 import kotlinx.coroutines.launch
 
-
+/**
+ * ViewModel class responsible for managing country information data and interactions.
+ *
+ * This ViewModel fetches country data from the repository and exposes it as LiveData.
+ */
 class CountryInfoViewModel : ViewModel() {
     private val repository = CountryRepository()
 

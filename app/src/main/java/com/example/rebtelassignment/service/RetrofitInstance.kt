@@ -3,6 +3,9 @@ package com.example.rebtelassignment.service
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * Singleton object responsible for creating and providing instances of Retrofit and the API service.
+ */
 object RetrofitInstance {
 
     private const val BASE_URL = "https://restcountries.com/"

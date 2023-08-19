@@ -1,3 +1,5 @@
+package com.example.rebtelassignment.view
+
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,14 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Card
 import androidx.compose.material3.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,19 +42,24 @@ import androidx.compose.ui.window.Dialog
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
+import com.example.rebtelassignment.R
 import com.example.rebtelassignment.model.Country
 import com.example.rebtelassignment.utils.Utils.Companion.formatPopulation
 import com.example.rebtelassignment.utils.Utils.Companion.getFlagUrl
 import com.example.rebtelassignment.utils.Utils.Companion.searchCountryList
-import com.example.rebtelassignment.utils.Utils.Companion.showToast
 import com.example.rebtelassignment.viewmodel.CountryInfoViewModel
 import org.json.JSONObject
 import java.io.InputStream
 
+/**
+ * Composable function to display the main screen of the country information app.
+ *
+ * @param viewModel The ViewModel responsible for managing the data.
+ */
 @Composable
 fun CountryInfoScreen(viewModel: CountryInfoViewModel) {
     val countries by viewModel.countries.observeAsState(null)
-    val jsonContent = readRawResourceText(com.example.rebtelassignment.R.raw.flags)
+    val jsonContent = readRawResourceText(R.raw.flags)
     val jsonObject = JSONObject(jsonContent)
 
     LaunchedEffect(Unit) {
@@ -72,7 +72,7 @@ fun CountryInfoScreen(viewModel: CountryInfoViewModel) {
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(12.dp),
-            text = (stringResource(id = com.example.rebtelassignment.R.string.ttile)),
+            text = (stringResource(id = R.string.ttile)),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black)
@@ -161,7 +161,7 @@ fun CountryDropDown(
     var isOpenDropDown by remember { mutableStateOf(false) }
     var searchValue by remember { mutableStateOf("") }
     var updateCountry by remember { mutableStateOf(false) }
-    val jsonContent = readRawResourceText(com.example.rebtelassignment.R.raw.flags)
+    val jsonContent = readRawResourceText(R.raw.flags)
     val jsonObject = JSONObject(jsonContent)
 
     Card(
