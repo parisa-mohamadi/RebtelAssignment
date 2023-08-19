@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rebtelassignment.model.Country
 import com.example.rebtelassignment.data.CountryRepository
+import com.example.rebtelassignment.utils.Utils.Companion.showToast
 import kotlinx.coroutines.launch
 
 
@@ -27,7 +28,6 @@ class CountryInfoViewModel : ViewModel() {
                 _countries.value = response
                 Log.e("tag","response: "+_countries.value.toString())
             } catch (e: Exception) {
-                // Handle error
                 Log.e("tag","error: "+e.message.toString())
             }
         }
