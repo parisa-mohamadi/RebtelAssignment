@@ -36,22 +36,31 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.example.rebtelassignment.model.Country
-import com.example.rebtelassignment.ui.theme.RebtelAssignmentTheme
+import com.example.rebtelassignment.utils.Utils.Companion.formatPopulation
+import com.example.rebtelassignment.utils.Utils.Companion.getFlagUrl
+import com.example.rebtelassignment.utils.Utils.Companion.searchCountryList
+import com.example.rebtelassignment.utils.Utils.Companion.showToast
 import com.example.rebtelassignment.viewmodel.CountryInfoViewModel
+import org.json.JSONObject
+import java.io.InputStream
 
 @Composable
 fun CountryInfoScreen(viewModel: CountryInfoViewModel) {
     val countries by viewModel.countries.observeAsState(null)
+    val jsonContent = readRawResourceText(com.example.rebtelassignment.R.raw.flags)
+    val jsonObject = JSONObject(jsonContent)
 
     LaunchedEffect(Unit) {
         viewModel.fetchCountries()
@@ -63,7 +72,7 @@ fun CountryInfoScreen(viewModel: CountryInfoViewModel) {
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(12.dp),
-            text = "Choose a country and see the details",
+            text = (stringResource(id = com.example.rebtelassignment.R.string.ttile)),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black)
@@ -71,7 +80,7 @@ fun CountryInfoScreen(viewModel: CountryInfoViewModel) {
         if (countries?.isEmpty() == true) {
             Log.e("tag", "there is no country")
         } else {
-            countries?.let {
+            countries?.let { it ->
                 CountryDropDown(
                     viewModel = it,
                     pickedCountry = {
@@ -83,46 +92,56 @@ fun CountryInfoScreen(viewModel: CountryInfoViewModel) {
                 )
             }
             countries?.let {
-                FlagWithDescription(com.example.rebtelassignment.R.drawable.flag_south_africa,countries!![0])
+                val flagUrl = getFlagUrl(countries!![0].cca2.uppercase(), jsonObject)
+                if (flagUrl != null) {
+                    FlagWithDescription(flagUrl, countries!![0])
+                } else {
+                    FlagWithDescription("https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png"
+                        ,countries!![0])
+                }
+
             }
         }
     }
 }
 
 @Composable
-fun FlagWithDescription(flagResId: Int, country: Country) {
+fun FlagWithDescription(flagResId: String?, country: Country) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
     ) {
+        val painter = rememberAsyncImagePainter(
+            model = ImageRequest.Builder(LocalContext.current)
+                .decoderFactory(SvgDecoder.Factory())
+                .data(flagResId)
+                .size(400)
+                .build()
+        )
         Image(
-            painter = painterResource(id = flagResId),
-            contentDescription = null,
-            modifier = Modifier
-                .height(200.dp)
-                .fillMaxWidth(),
-            contentScale = ContentScale.Crop
+            painter = painter,
+            contentDescription = null
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "name: ${country.name.official}",
+            text = "Name: ${country.name.official}",
             fontSize = 18.sp,
         )
         Text(
-            text = "capital: ${country.capital[0]}",
+            text = "Capital: ${country.capital[0]}",
             fontSize = 18.sp,
         )
         Text(
-            text = "population: ${country.population}",
+            text = "Population: ${formatPopulation(country.population.toLong())}",
             fontSize = 18.sp,
         )
         Text(
-            text = "currencies: ${country.currencies.keys}",
+            text = "Currencies: ${country.currencies.keys}",
             fontSize = 18.sp,
         )
         Text(
-            text = "languages: ${country.languages.values}",
+            text = "Languages: ${country.languages.values}",
             fontSize = 18.sp,
         )
     }
@@ -132,34 +151,33 @@ fun FlagWithDescription(flagResId: Int, country: Country) {
 fun CountryDropDown(
     viewModel: List<Country>,
     modifier: Modifier = Modifier,
-    isOnlyFlagShow: Boolean = false,
     defaultSelectedCountry: Country = viewModel[0],
     pickedCountry: (Country) -> Unit,
     dialogSearch: Boolean = true,
     dialogRounded: Int = 12,
 ) {
     val countryList: List<Country> = viewModel
-    var isPickCountry by remember { mutableStateOf(defaultSelectedCountry) }
+    var selectedCountry by remember { mutableStateOf(defaultSelectedCountry) }
     var isOpenDropDown by remember { mutableStateOf(false) }
     var searchValue by remember { mutableStateOf("") }
     var updateCountry by remember { mutableStateOf(false) }
+    val jsonContent = readRawResourceText(com.example.rebtelassignment.R.raw.flags)
+    val jsonObject = JSONObject(jsonContent)
 
     Card(
         modifier = modifier
-            .padding(3.dp)
+            .padding(8.dp)
             .clickable { isOpenDropDown = true }
     ) {
-        Column(modifier = Modifier.padding(15.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (!isOnlyFlagShow) {
                         Text(
-                            isPickCountry.name.common,
+                            selectedCountry.name.common,
                             Modifier.padding(horizontal = 18.dp)
                         )
-                }
                 Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
             }
         }
@@ -176,7 +194,7 @@ fun CountryDropDown(
                 ) {
                     Column {
                         if (dialogSearch) {
-                            searchValue = DropDownSearchView()
+                            searchValue = dropDownSearchView()
                         }
                         LazyColumn {
                             items(
@@ -194,7 +212,7 @@ fun CountryDropDown(
                                         )
                                         .clickable {
                                             pickedCountry(countryItem)
-                                            isPickCountry = countryItem
+                                            selectedCountry = countryItem
                                             isOpenDropDown = false
                                             updateCountry = true
                                         }) {
@@ -211,12 +229,17 @@ fun CountryDropDown(
         }
     }
     if (updateCountry){
-        FlagWithDescription(com.example.rebtelassignment.R.drawable.flag_south_africa,isPickCountry)
+        val flagUrl = getFlagUrl(selectedCountry.cca2.uppercase(), jsonObject)
+        if (flagUrl != null) {
+            FlagWithDescription(flagUrl,selectedCountry)
+        } else {
+            FlagWithDescription("https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png", selectedCountry)
+        }
     }
 }
 
 @Composable
-private fun DropDownSearchView(): String {
+private fun dropDownSearchView(): String {
     var searchValue by remember { mutableStateOf("") }
     Row {
         CustomTextField(
@@ -289,21 +312,9 @@ private fun CustomTextField(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun CountryInfoPreview() {
-    RebtelAssignmentTheme {
-        CountryInfoScreen(viewModel = CountryInfoViewModel())
-    }
-}
-
-
-fun List<Country>.searchCountryList(key: String): MutableList<Country> {
-    val tempList = mutableListOf<Country>()
-    this.forEach {
-        if (it.name.common.lowercase().contains(key.lowercase())) {
-            tempList.add(it)
-        }
-    }
-    return tempList
+fun readRawResourceText(resourceId: Int): String {
+    val context = LocalContext.current
+    val inputStream: InputStream = context.resources.openRawResource(resourceId)
+    return inputStream.bufferedReader().use { it.readText() }
 }

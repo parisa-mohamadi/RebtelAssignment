@@ -9,6 +9,7 @@ data class Country(
     @SerializedName("currencies") val currencies: Map<String, Currency>,
     @SerializedName("languages") val languages: Map<String, String>,
     @SerializedName("flag") val flag: String,
+    @SerializedName("cca2") val cca2: String,
     // we can Add more properties if needed
 )
 

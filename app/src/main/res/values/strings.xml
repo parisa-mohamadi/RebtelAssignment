@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Rebtel Assignment</string>
+    <string name="ttile">Choose a country and see the details</string>
+    <string name="country_null">there is no country</string>
 </resources>
