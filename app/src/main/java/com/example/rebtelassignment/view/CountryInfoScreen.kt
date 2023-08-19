@@ -31,7 +31,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -68,18 +70,17 @@ fun CountryInfoScreen(viewModel: CountryInfoViewModel) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(12.dp),
-            text = (stringResource(id = R.string.ttile)),
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black)
-
         if (countries?.isEmpty() == true) {
             Log.e("tag", "there is no country")
         } else {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(12.dp),
+                text = (stringResource(id = R.string.ttile)),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black)
             countries?.let { it ->
                 CountryDropDown(
                     viewModel = it,
@@ -317,4 +318,18 @@ fun readRawResourceText(resourceId: Int): String {
     val context = LocalContext.current
     val inputStream: InputStream = context.resources.openRawResource(resourceId)
     return inputStream.bufferedReader().use { it.readText() }
+}
+
+@Composable
+fun ConnectionLostScreen(imageResId: Int) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = imageResId),
+            contentDescription = null,
+            contentScale = ContentScale.Fit
+        )
+    }
 }

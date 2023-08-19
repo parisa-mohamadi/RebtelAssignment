@@ -12,6 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.rebtelassignment.ui.theme.RebtelAssignmentTheme
+import com.example.rebtelassignment.utils.Utils.Companion.isNetworkAvailable
+import com.example.rebtelassignment.view.ConnectionLostScreen
 
 /**
  * Main entry point of the application.
@@ -31,7 +33,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CountryInfoScreen(viewModel = viewModel)
+                    if (isNetworkAvailable(this)) {
+                        CountryInfoScreen(viewModel = viewModel)
+                    } else {
+                        ConnectionLostScreen(R.drawable.connectionlost)
+                    }
                 }
             }
         }
