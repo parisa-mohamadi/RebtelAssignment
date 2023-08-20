@@ -43,6 +43,8 @@ The app follows the MVVM (Model-View-ViewModel) architecture, which promotes the
 - LiveData: For observing data changes and updating the UI.
 - ViewModel: For managing UI-related data in a lifecycle-conscious way.
 - Coil: For efficient and flexible image loading.
+- MockK: used in unit testing to create and handle mock objects.
+- Coroutines: for asynchronous programming.
 
 ## Usage
 1. Launch the app on your emulator or device.
