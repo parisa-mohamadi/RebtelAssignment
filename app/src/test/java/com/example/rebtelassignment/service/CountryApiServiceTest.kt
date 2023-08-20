@@ -22,10 +22,9 @@ class CountryApiServiceTest {
 
     @Test
     fun `getCountries should return a list of countries`() {
-        // Given
         val mockCountries = listOf(
             Country(
-                name = Name(common="Svalbard and Jan Mayen", official="Svalbard og Jan Mayen", nativeName= NativeName(
+                name = Name(common="United States", official="United States", nativeName= NativeName(
                             Ara("official name", "common name"))),
                 capital = listOf("Washington, D.C."),
                 population = 1000,
@@ -44,10 +43,8 @@ class CountryApiServiceTest {
         )
         coEvery { countryApiService.getCountries() } returns mockCountries
 
-        // When
         val result = runBlocking { countryApiService.getCountries() }
 
-        // Then
         assertEquals(mockCountries, result)
     }
 }

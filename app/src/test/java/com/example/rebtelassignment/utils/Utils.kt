@@ -13,7 +13,6 @@ import org.junit.Test
 class UtilsTest {
     @Test
     fun `searchCountryList should return filtered country list`() {
-        // Given
         val key = "united"
         val countries = listOf(
             Country(
@@ -36,10 +35,8 @@ class UtilsTest {
             ),
         )
 
-        // When
         val result = countries.searchCountryList(key)
 
-        // Then
         assertEquals(1, result.size)
         assertEquals("United States", result[0].name.common)
     }
